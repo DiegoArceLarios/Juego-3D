@@ -23,7 +23,7 @@ function setup(){
 function draw(){
    background("white");
    resizeCanvas(windowWidth,windowHeight);
-   createMapa(675, 100);
+   createMapa(width/2, height/2);
    createMapa(695, 120);
    createMapa(715, 140);
    createMapa(735, 160);
@@ -105,40 +105,38 @@ function controls(){
 function fondo(){
    var ys = [];
    var xs = [];
-   var sumax,sumay;
+   var sumax = 0;
+   var sumay = 0;
    var promedioG = [];
    var canva = windowWidth;
    var cuadrosx, cuadrosy;
    var suma2;
    
    for (var i=0; i <= 40; i++){
-      if (mapaGroup[i-1].isTouching(vista)){
-         var y1 = mapaGroup[i-1].position.y - personaje.position.y;
+      if (mapaGroup[i].isTouching(vista)){
+         var y1 = mapaGroup[i].position.y - personaje.position.y;
          if (y1 < 0){
             y1 = y1*-1;
          }
          sumay = sumay + y1;
-         ys.push(y1);
-         
-         
+         ys.push(y1);         
       }
    }
    for (var i=0; i <= 40; i++){
-      if (mapaGroup[i-1].isTouching(vista)){
-         var x1 = mapaGroup[i-1].position.x - personaje.position.x;
+      if (mapaGroup[i].isTouching(vista)){
+         var x1 = mapaGroup[i].position.x - personaje.position.x;
          if (x1 < 0){
             x1 = x1*-1;
          }
          sumax = sumax + x1;
-         xs.push(x1);
-         
-         
+         xs.push(x1);   
       }
    }
    cuadrosy = ys.length;
    cuadrosx = xs.length;
    if (sumay > sumax){
-      for (var i; i <= cuadrosy; i++){
+      for (var i = 0; i <= cuadrosy; i++){
+         console.log("ciclo for sumay");
          var promedio = (ys[i-1]*canva)/sumay;
          if (promedioG[0] === undefined){
             partesFondo(promedio/2,promedio);
@@ -150,9 +148,8 @@ function fondo(){
          }
          promedioG.push(promedio);
       }
-   }  
-   
-   if (sumax >= sumay){
+   }  else if (sumax >= sumay){
+      console.log("ciclo for sumax");
       for (var i; i <= cuadrosx; i++){
          var promedio = (xs[i-1]*canva)/sumax;
          if (promedioG[0] === undefined){
@@ -172,9 +169,11 @@ function fondo(){
 }
 
 function partesFondo(x,w){
-   for (var i; i <= 40; i++){
-      if (mapaGroup[i-1].isTouching(vista)){
+   console.log("activacion de partes fondo");
+   for (var i = 0; i <= 40; i++){
+      if (mapaGroup[i].isTouching(vista)){
          var image;
+         //Puedes usar un switch
          if (i === 1){
             image = loadImage("./fondo/fondo2.png");
          }
@@ -295,12 +294,17 @@ function partesFondo(x,w){
          if (i === 40){
             image = loadImage("./fondo/fondo2.png");
          }
-
+         
+         mapaGroup[i].addImage(image);
+         /*
+         push();
+         imageMode(CENTER);
+         image(image,x,windowHeight/2,w,windowHeight);
+         pop();
+         */
       }
-      push();
-      imageMode(CENTER);
-      image(image,x,windowHeight/2,w,windowHeight);
-      pop();
+      
+
 
    }
    
