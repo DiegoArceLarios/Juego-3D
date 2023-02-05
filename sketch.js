@@ -36,8 +36,15 @@ var player, base, f, help = false,
   var d = 0;
   var ex = 0;
   var ez = 0;
+  var selectX = 10;
+  var selectY = 220;
   var gameState = 0;
-
+  var a300 = 300;
+  var a150 = 150;
+  var a158 = 158;
+  var a170 = 170;
+  var a100 = 100;
+  var a50 = 50;
 
   var caja1,caja2,caja3,caja4,caja5,caja6,caja7,caja8,caja9,caja10,caja11,caja12;
 
@@ -53,6 +60,9 @@ var player, base, f, help = false,
   var inicio = true;
   var tiempo1 = true;
   var tiempo2 = true;
+  var aJugar = true;
+  var retrasoD = false;
+  var retrasoI = false;
 
   var otherPlayer;
   var distancia1,distancia2,distancia3,distancia4,distancia5,distancia6,distancia7,distancia8,distancia9,distancia10,
@@ -64,12 +74,19 @@ var player, base, f, help = false,
   var blocks;
   var form;
   var fondo1,fondo2,fondo3,fondo4,fondo5;
-  var fondoImg;
+  var fondoImg,fondo1Img;
   var recargaImg;
   var sol;
   var caraImg;
   var vida;
   var vida1;
+  var villano1,villano2,villano3,villano4,villano5;
+  var seleccionador;
+  var texto;
+  var pistolas;
+  var indicaciones;
+  
+
   
 
 
@@ -92,7 +109,22 @@ var player, base, f, help = false,
 
   munImg = loadImage('./imagenes/municion.png');
 
-  fondoImg = loadImage('imagenes/fondo juego.png')
+  fondoImg = loadImage('./imagenes/fondo juego.png');
+  fondo1Img = loadImage('./imagenes/fondo juego2.png');
+
+  texto = loadImage('./imagenes/texto1.png');
+  villano1 = loadImage('./imagenes/villano1.png');
+  villano2 = loadImage('./imagenes/villano2.png');
+  villano3 = loadImage('./imagenes/villano3.png');
+  villano4 = loadImage('./imagenes/villano4.png');
+  villano5 = loadImage('./imagenes/villano5.png');
+
+  pistolas = loadImage ('./imagenes/pistolas.png');
+
+  seleccionador = loadImage('./imagenes/seleccionador.png');
+
+  indicaciones = loadImage('./imagenes/indicaciones.png')
+
 
 }
 
@@ -134,11 +166,8 @@ function setup() {
   sol = new Block(0,-45,0,20,20,20);
   sol.fillColor = color (255,255,0);
   
-  frameRate(60);
-  strokeWeight(2);
-  cactus();
-  crearCasas();
-  crearMunicio();
+  funcionesSetup();
+  
 }
 
 
@@ -151,6 +180,7 @@ function draw() {
   background(65, 65, 250);
   if (gameState === 0){
     form.display();
+    //fondo
     camera(0, 0, (height / 2.0) / tan(PI * 30.0 / 180.0), 0, 0, 0, 0, 1, 0);
     ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
     fill(0, 0, 0, 200);
@@ -158,244 +188,22 @@ function draw() {
     translate(-380, -380, 0);
     image(fondoImg,-300,50,1400,670);
     
-  }else{
-
+  }else if (gameState === 1){
   
+    eleccion();
+    controles();
+    comoEmpezar();
 
-  base.update();
-  base.display();
-
-  player.update();
-  //console.log(player.position);
-
-  actus1.display();
-  cactus2.display();
-  cactus3.display();
-  cactus4.display();
-  cactus5.display();
-  cactus6.display();
-  cactus7.display();
-  cactus8.display();
-  cactus9.display();
-  cactus10.display();
-  cactus11.display();
-  cactus12.display();
-  cactus13.display();
-  cactus14.display();
-  cactus15.display();
-
-  casa1.display(casa1Img);
-  casa2.display(casa2Img);
-  casa3.display(casa3Img);
-  casa4.display(casa2Img);
-  casa5.display(casa3Img);
-  casa6.display(casa1Img);
-  casa7.display(casa2Img);
-
-  casa11.display(casa22Img);
-  casa22.display(casa33Img,);
-  casa33.display(casa22Img);
-  casa44.display(casa22Img);
-  casa55.display(casa11Img);
-  casa66.display(casa11Img);
-  casa77.display(casa33Img);
-
-  casa111.display(casa11Img);
-  casa222.display(casa22Img);
-  casa333.display(casa33Img);
-  casa444.display(casa33Img);
-  casa555.display(casa33Img);
-  casa666.display(casa11Img);
-  casa777.display(casa11Img);
-
-  casa1111.display(casa1Img);
-  casa2222.display(casa2Img);
-  casa3333.display(casa3Img);
-  casa4444.display(casa2Img);
-  casa5555.display(casa3Img);
-  casa6666.display(casa1Img);
-  casa7777.display(casa2Img);
-
-  caja1.display(cajaImg);
-  caja2.display(cajaImg);
-  caja3.display(cajaImg);
-  caja4.display(cajaImg);
-  caja5.display(cajaImg);
-  caja6.display(cajaImg);
-  caja7.display(cajaImg);
-  caja8.display(cajaImg);
-  caja9.display(cajaImg);
-  caja10.display(cajaImg);
-  caja11.display(cajaImg);
-  caja12.display(cajaImg);
-
-  fondo1.display();
-  fondo1.update();
-  fondo2.display();
-  fondo2.update();
-  fondo3.display();
-  fondo3.update();
-  fondo4.display();
-  fondo4.update();
-  fondo5.display();
-  fondo5.update();
-
-  sol.display();
-  sol.update();
-
-  if (vida1 > 0){
-  otherPlayer.dibujar();
-  otherPlayer.bala();
-  }
-
-  mun1.display(munImg);
-  mun2.display(munImg);
-  mun3.display(munImg);
-
-  distaciaPlayerBala1 = dist(player.x,player.y,player.z,otherPlayer.x,otherPlayer.y1,otherPlayer.z);
-  distaciaPlayerBala2 = dist(player.x,player.y,player.z,otherPlayer.x,otherPlayer.y2,otherPlayer.z);
-  distaciaPlayerBala3 = dist(player.position.x,player.position.z,otherPlayer.x1,otherPlayer.z1);
-
-  if (distaciaPlayerBala3 <= 1&&tiempo1){
-    vida-=10;
-    tiempo1 = false;
-    setTimeout(()=>{
-      tiempo1 = true;   
-    },1000)
-  }
-
-  if (distaciaPlayerBala1 <= 1&&tiempo2){
-    vida1-=20;
-    tiempo2 = false;
-    setTimeout(()=>{
-      tiempo2 = true;   
-    },1000)
-  }
-
-  if (distaciaPlayerBala2 <= 1&&tiempo2){
-    vida1-=10;
-    tiempo2 = false;
-    setTimeout(()=>{
-      tiempo2 = true;   
-    },1000)
-  }
-
-  if (vida <= 0){
-    vida = 0;
-  }
-  if (vida1 <= 0){
-    vida1 = 0;
-  }
-  
-  if (player.bala1 || keyCode == 32){
-    player.disparar();
-    keyCode = 60;
-  }
-
-  if(keyIsDown(69)){
-    player.pov.fovy = 0.3;
-    player.updatePOV();
   }else{
-    player.pov.fovy = 1;
-    player.updatePOV();
-  }
-
-
-
-
- // block2.update();
-  drawAxes();
-
-    // Heads Up Display extension by jWilliam
-    push(); // this affects the frame rate
-    camera(0, 0, (height / 2.0) / tan(PI * 30.0 / 180.0), 0, 0, 0, 0, 1, 0);
-    ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
-    fill(0, 0, 0, 200);
-    noStroke();
-    translate(-380, -380, 0);
-    scale(2);
-    rect(0, 0, 180, 85);
-    fill('#FFFFFF');
-    ellipse(190,190,5);
-
-    if (keyIsDown(69)){
-      fill('#000000');
-      rect(-150,0,150,600);
-      rect(390,0,150,600);
-      rect(-150,300,600,100);
-      rect(-150,0,600,100);
-      fill('#830707')
-      ellipse(190,190,10);
-    }
-    if (player.municion > 5){
-      fill('#B88C00');
-      rect(-130,80,8,20);
-    }
-    if (player.municion > 4){
-      fill('#B88C00');
-      rect(-120,80,8,20);
-    }
-    if (player.municion > 3){
-      fill('#B88C00');
-      rect(-110,80,8,20);
-    }
-    if (player.municion > 2){
-      fill('#B88C00');
-      rect(-100,80,8,20);
-    }
-    if (player.municion > 1){
-      fill('#B88C00');
-      rect(-90,80,8,20);
-    }
-    if (player.municion > 0){
-      fill('#B88C00');
-      rect(-80,80,8,20);
-    }
-
-    if (!player.tiempo){
-      image(recargaImg,-70,80,20,20);
-    }
-
-    
-    
-    fill('#808080')
-    rect(-130,50,100,10);
-    fill('#F22616')
-    rect(-130,50,vida,10);
-
-    fill('#808080')
-    rect(400,50,100,10);
-    switch(form.nombre){
-      case 1:fill('#000000')
-      break;
-      case 2:fill('#006400')
-      break;
-      case 3:fill('#8C8C8C')
-      break;
-      case 4:fill('#6F2A0B')
-      break;
-      case 5:fill('#FFCA21')
-      break;
-    }
-    rect(400,50,vida1,10);
-
-    
-
-    fill(1000);
-    text(' keys: a/d : izquierda/derecha', 10, 40);
-    text('       w/s : adelante/atras', 10, 50);
-    text('       espacio : disparar', 10, 60);
-    text('       e : apuntar', 10, 70);
-
-    if (vida === 0){
-      fill('#580000');
-      rect(-200,0,1000,1000);
-    }
-    pop();
-
-
-
-    
+    display();
+    //distancia
+    distaciaPlayerBala1 = dist(player.x,player.y,player.z,otherPlayer.x,otherPlayer.y1,otherPlayer.z);
+    distaciaPlayerBala2 = dist(player.x,player.y,player.z,otherPlayer.x,otherPlayer.y2,otherPlayer.z);
+    distaciaPlayerBala3 = dist(player.position.x,player.position.z,otherPlayer.x1,otherPlayer.z1);
+      
+    ifs();
+    drawAxes();
+    pintar();
   }
 }
 
@@ -674,8 +482,379 @@ function crearCasas(){
 }
 
 function crearMunicio(){
+
   mun1 = new Mun(player);
   mun2 = new Mun(player);
   mun3 = new Mun(player);
 }
 
+function funcionesSetup(){
+
+  frameRate(60);
+  strokeWeight(2);
+  cactus();
+  crearCasas();
+  crearMunicio();
+}
+
+function display(){
+
+  base.update();
+  base.display();
+
+  player.update();
+  //console.log(player.position);
+
+  actus1.display();
+  cactus2.display();
+  cactus3.display();
+  cactus4.display();
+  cactus5.display();
+  cactus6.display();
+  cactus7.display();
+  cactus8.display();
+  cactus9.display();
+  cactus10.display();
+  cactus11.display();
+  cactus12.display();
+  cactus13.display();
+  cactus14.display();
+  cactus15.display();
+
+  casa1.display(casa1Img);
+  casa2.display(casa2Img);
+  casa3.display(casa3Img);
+  casa4.display(casa2Img);
+  casa5.display(casa3Img);
+  casa6.display(casa1Img);
+  casa7.display(casa2Img);
+
+  casa11.display(casa22Img);
+  casa22.display(casa33Img,);
+  casa33.display(casa22Img);
+  casa44.display(casa22Img);
+  casa55.display(casa11Img);
+  casa66.display(casa11Img);
+  casa77.display(casa33Img);
+
+  casa111.display(casa11Img);
+  casa222.display(casa22Img);
+  casa333.display(casa33Img);
+  casa444.display(casa33Img);
+  casa555.display(casa33Img);
+  casa666.display(casa11Img);
+  casa777.display(casa11Img);
+
+  casa1111.display(casa1Img);
+  casa2222.display(casa2Img);
+  casa3333.display(casa3Img);
+  casa4444.display(casa2Img);
+  casa5555.display(casa3Img);
+  casa6666.display(casa1Img);
+  casa7777.display(casa2Img);
+
+  caja1.display(cajaImg);
+  caja2.display(cajaImg);
+  caja3.display(cajaImg);
+  caja4.display(cajaImg);
+  caja5.display(cajaImg);
+  caja6.display(cajaImg);
+  caja7.display(cajaImg);
+  caja8.display(cajaImg);
+  caja9.display(cajaImg);
+  caja10.display(cajaImg);
+  caja11.display(cajaImg);
+  caja12.display(cajaImg);
+
+  fondo1.display();
+  fondo1.update();
+  fondo2.display();
+  fondo2.update();
+  fondo3.display();
+  fondo3.update();
+  fondo4.display();
+  fondo4.update();
+  fondo5.display();
+  fondo5.update();
+
+  sol.display();
+  sol.update();
+
+  if (vida1 > 0){
+    otherPlayer.dibujar();
+    otherPlayer.bala();
+    }
+
+  mun1.display(munImg);
+  mun2.display(munImg);
+  mun3.display(munImg);
+
+
+  
+}
+
+function balas(){
+
+  if (player.municion > 5){
+    fill('#B88C00');
+    rect(-130,80,8,20);
+  }
+  if (player.municion > 4){
+    fill('#B88C00');
+    rect(-120,80,8,20);
+  }
+  if (player.municion > 3){
+    fill('#B88C00');
+    rect(-110,80,8,20);
+  }
+  if (player.municion > 2){
+    fill('#B88C00');
+    rect(-100,80,8,20);
+  }
+  if (player.municion > 1){
+    fill('#B88C00');
+    rect(-90,80,8,20);
+  }
+  if (player.municion > 0){
+    fill('#B88C00');
+    rect(-80,80,8,20);
+  }
+
+  if (!player.tiempo){
+    image(recargaImg,-70,80,20,20);
+  }
+}
+
+
+function ifs(){
+
+  if (distaciaPlayerBala3 <= 1&&tiempo1){
+    vida-=10;
+    tiempo1 = false;
+    setTimeout(()=>{
+      tiempo1 = true;   
+    },1000)
+  }
+
+  if (distaciaPlayerBala1 <= 1&&tiempo2){
+    vida1-=20;
+    tiempo2 = false;
+    setTimeout(()=>{
+      tiempo2 = true;   
+    },1000)
+  }
+
+  if (distaciaPlayerBala2 <= 1&&tiempo2){
+    vida1-=10;
+    tiempo2 = false;
+    setTimeout(()=>{
+      tiempo2 = true;   
+    },1000)
+  }
+
+  if (vida <= 0){
+    vida = 0;
+  }
+  if (vida1 <= 0){
+    vida1 = 0;
+  }
+  
+  if (player.bala1 || keyCode == 32){
+    player.disparar();
+    keyCode = 60;
+  }
+
+  if(keyIsDown(69)){
+    player.pov.fovy = 0.3;
+    player.updatePOV();
+  }else{
+    player.pov.fovy = 1;
+    player.updatePOV();
+  }
+  if (vida1 === 0){
+  swal(
+    {
+      title: "¡Has ganado!",
+      text: "¡Eres el nuevo sheriff del pueblo!",
+      imageUrl:
+        "imagenes/sheriff.png",
+      imageSize: "150x150",
+      confirmButtonText: "R"
+    },
+    function(isConfirm) {
+      if (isConfirm) {
+        location.reload();
+      }
+    }
+  );
+
+}
+
+if (vida === 0){
+  swal(
+    {
+      title: "¡Has perdido!",
+      text: "Vuelve a intentarlo",
+      imageUrl:
+        "imagenes/sherffiLose.png",
+      imageSize: "150x150",
+      confirmButtonText: "R"
+    },
+    function(isConfirm) {
+      if (isConfirm) {
+        location.reload();
+      }
+    }
+  );
+
+}
+}
+
+
+
+
+
+function pintar(){
+  push(); // this affects the frame rate
+    camera(0, 0, (height / 2.0) / tan(PI * 30.0 / 180.0), 0, 0, 0, 0, 1, 0);
+    ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
+    fill(0, 0, 0, 200);
+    noStroke();
+    translate(-380, -380, 0);
+    scale(2);
+    rect(0, 0, 180, 85);
+    fill('#FFFFFF');
+    ellipse(190,190,5);
+
+    if (keyIsDown(69)){
+      fill('#000000');
+      rect(-150,0,150,600);
+      rect(390,0,150,600);
+      rect(-150,300,600,100);
+      rect(-150,0,600,100);
+      fill('#830707')
+      ellipse(190,190,10);
+    }
+    balas();
+    
+    fill('#808080')
+    rect(-130,50,100,10);
+    fill('#F22616')
+    rect(-130,50,vida,10);
+
+    fill('#808080')
+    rect(400,50,100,10);
+    switch(form.nombre){
+      case 1:fill('#000000')
+      break;
+      case 2:fill('#006400')
+      break;
+      case 3:fill('#8C8C8C')
+      break;
+      case 4:fill('#6F2A0B')
+      break;
+      case 5:fill('#FFCA21')
+      break;
+    }
+    rect(400,50,vida1,10);
+    fill(1000);
+    text(' keys: a/d : izquierda/derecha', 10, 40);
+    text('       w/s : adelante/atras', 10, 50);
+    text('       espacio : disparar', 10, 60);
+    text('       e : apuntar', 10, 70);
+
+    if (vida === 0){
+      fill('#580000');
+      rect(-200,0,1000,1000);
+    }
+    pop();
+
+}
+
+function controles(){
+
+  if (keyIsDown(RIGHT_ARROW)&&!retrasoD){
+    selectX+=200;
+    retrasoD = true;
+    setTimeout(()=>{
+      retrasoD = false;   
+    },200)   
+  }
+  if (keyIsDown(LEFT_ARROW)&&!retrasoI){
+    selectX-=200;
+    retrasoI = true;
+    setTimeout(()=>{
+      retrasoI = false;   
+    },200)   
+    
+  }
+
+  if (selectX > 410&&selectY === 220){
+    selectX = 20;
+    selectY = 420
+  }else if(selectX < 10&&selectY === 220){
+    selectX = 10;
+  }
+
+  if (selectX > 210&&selectY === 420){
+    selectX = 210;
+  }else if(selectX < 0&&selectY === 420){
+    selectX = 410;
+    selectY = 220;
+  }
+}
+
+function jugar(){
+ 
+  form.jugar();
+  gameState += 1; 
+
+}
+
+function comoEmpezar(){
+  if (keyIsDown(69)){
+      
+    if (selectX < 100&&selectY === 220){
+      form.nombre = 5;
+      otherPlayer.dificultad = 50;
+    }
+    if (selectX === 210&&selectY === 220){
+      form.nombre = 2;
+      otherPlayer.dificultad = 40;
+    }
+    if (selectX > 240&&selectY === 220){
+      form.nombre = 4;
+      otherPlayer.dificultad = 30;
+    }
+    if (selectX < 100&&selectY === 420){
+      form.nombre = 3;
+      otherPlayer.dificultad = 20;
+    }
+    if (selectX > 101&&selectY === 420){
+      form.nombre = 1;
+      otherPlayer.dificultad = 10;
+    }
+    
+
+    jugar();
+    
+    
+  }
+}
+function eleccion(){
+  camera(0, 0, (height / 2.0) / tan(PI * 30.0 / 180.0), 0, 0, 0, 0, 1, 0);
+    ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
+    fill(0, 0, 0, 200);
+    noStroke();
+    translate(-380, -380, 0);
+    image(fondo1Img,-300,0,1400,720);
+    image(texto,-200,100,300,50);
+    image(villano1,-20,180,150,158);
+    image(villano2, 180,190,150,150);
+    image(villano3,380,190,150,150);
+    image(villano4,-20,390,150,150);
+    image(villano5,180,370,150,170);
+    image(seleccionador,selectX,selectY,100,100);
+    image(pistolas,600,320,300,300);
+    image(indicaciones,600,100,300,150);
+}

@@ -15,7 +15,7 @@ class OtherPlayer{
             this.px2 = 0;   
             this.pz2 = 0;
             this.res = 0.01;
-            this.dificultad = 10;
+            this.dificultad = 30;
             this.resX = random(this.res,-this.res);
             this.resZ = random(this.res,-this.res);       
             this.v = true;
@@ -26,12 +26,32 @@ class OtherPlayer{
 
     dibujar(){
 
-        
-            var cabello = new Block(this.x,-5.1,this.z,1,0.2,1);
-            cabello.fillColor = color(0,0,0);
+            if(form.nombre !== 2){
+              var cabello = new Block(this.x,-5.1,this.z,1,0.2,1);
+              cabello.fillColor = color(0,0,0);
+              cabello.display();
+              cabello.update();
+            }
+              
+            
             var cabeza = new Block(this.x,this.y1,this.z,1,1,1);
-            cabeza.fillColor = color(255,242,204);
+            if (form.nombre === 2){
+              cabeza.fillColor = color(35,54,22);
+            }else{
+              cabeza.fillColor = color(255,242,204);
+            }
             var cuerpo = new Block(this.x,this.y2,this.z,1,1,1);
+            if (form.nombre === 5||form.nombre === 1){
+              var sombrero1 = new Block(this.x,this.y1-0.7,this.z,1.5,0.2,1.5);
+              sombrero1.fillColor = color(237,131,59);
+              sombrero1.display();
+              sombrero1.update();
+
+              var sombrero2 = new Block(this.x,this.y1-1,this.z,0.8,0.8,0.8);
+              sombrero2.fillColor = color(237,131,59);
+              sombrero2.display();
+              sombrero2.update();
+            }
             switch(form.nombre){
               case 1:cuerpo.fillColor = color(0,0,0);
               break;
@@ -56,8 +76,8 @@ class OtherPlayer{
             pierna.display();
             pierna.update();
 
-            cabello.display();
-            cabello.update();
+            
+            
 
   
             if (this.x > 70||this.x < 0){
